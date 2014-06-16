@@ -34,13 +34,17 @@ public class Particle {
         this.vy = this.y - this.oy;
         this.ox = this.x;
         this.oy = this.y;
-        this.x += vx;
-        this.y += vy;
+        //if (this.x <= 500 && this.x >= 0){
+            this.x += vx;
+        //}
+        //if (this.y <= 500 && this.y >= 0){
+            this.y += vy;
+        //}
     }
     
     public void draw(Graphics g){
         g.setColor(Color.white);
         //g.drawOval((int)x, (int)y, 5, 5);
-        g.drawLine((int)x, (int)y, (int)x, (int)y);
+        g.drawLine((int)ox, (int)oy, (int)x, (int)y);
     }
 }

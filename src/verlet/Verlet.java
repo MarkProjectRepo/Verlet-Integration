@@ -6,6 +6,7 @@
 
 package verlet;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -19,10 +20,10 @@ import listeners.MouseListen;
 public class Verlet {
 
     Window window = new Window();
-    final int entities = 5000;
+    final int entities = 100000;
     double delta;
     double mx = -1, my = -1;
-    
+    Random r = new Random();
     ArrayList<Particle> particles = new ArrayList<>();
     
     public Verlet(){
@@ -36,9 +37,9 @@ public class Verlet {
             }
         
         });
-        Random r = new Random();
+        
         for (int i = 0; i < entities; i++){
-            particles.add(new Particle(r.nextInt(window.Height), r.nextInt(window.Width)));
+            particles.add(new Particle(r.nextInt(window.Width), r.nextInt(window.Height)));
         }
     }
     
@@ -73,6 +74,7 @@ public class Verlet {
         for (Particle p : particles){
             p.draw(g);
         }
+        
     }
     
     public void update(double delta){
