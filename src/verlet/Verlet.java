@@ -21,7 +21,7 @@ public class Verlet {
     Window window = new Window();
     final int entities = 5000;
     double delta;
-    double mx, my;
+    double mx = -1, my = -1;
     
     ArrayList<Particle> particles = new ArrayList<>();
     

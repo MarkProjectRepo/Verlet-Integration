@@ -20,11 +20,13 @@ public class Particle {
     }
     
     public void attraction(double x, double y){
-        double dx = x - this.x;
-        double dy = y - this.y;
-        double distance = Math.sqrt(dx * dx + dy * dy);
-        this.x += dx / distance;
-        this.y += dy / distance;
+        if (x != -1){
+            double dx = x - this.x;
+            double dy = y - this.y;
+            double distance = Math.sqrt(dx * dx + dy * dy);
+            this.x += dx / distance;
+            this.y += dy / distance;
+        }
     }
     
     public void update(double delta){
