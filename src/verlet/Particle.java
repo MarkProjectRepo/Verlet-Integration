@@ -32,13 +32,8 @@ public class Particle {
             double dx = x - this.x;
             double dy = y - this.y;
             double distance = Math.sqrt(dx * dx + dy * dy);
-            for (Connecter c : connections){
-                if (c.length() <= c.maxLength){
-                    
-                    this.x += (dx / distance);
-                    this.y += (dy / distance);
-                }
-            }
+            this.x += (dx / distance);
+            this.y += (dy / distance);
         }
     }
     
@@ -57,15 +52,17 @@ public class Particle {
             this.vy = this.y - this.oy;
             
             
-            for (Connecter c : connections){
+            this.ox = this.x;
+            this.oy = this.y;
+            this.x += vx;
+            this.y += vy;
+            
+            /*for (Connecter c : connections){
                 if (c.length() <= c.maxLength){
                     
-                    this.ox = this.x;
-                    this.oy = this.y;
-                    this.x += vx;
-                    this.y += vy;
+
                 }
-            }
+            }*/
         }
     }
     

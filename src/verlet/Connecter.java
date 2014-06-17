@@ -30,23 +30,15 @@ public class Connecter {
         this.index2 = index2;
     }
     
-    public void update(double x1, double y1, double x2, double y2){
-        this.x1 = x1;
-        this.y1 = y1;
-        
-        this.x2 = x2;
-        this.y2 = y2;
-    }
-    
     public double length(){
-        double dx = this.x1 - this.x2;
-        double dy = this.y1 - this.y2;
+        double dx = this.p1.x - this.p2.x;
+        double dy = this.p1.y - this.p2.y;
         
         return Math.sqrt(dx * dx + dy * dy);
     }
     
     public void draw(Graphics g){
-        g.setColor(Color.gray);
-        //g.drawLine((int)x1, (int)y1, (int)x2, (int)y2);
+        g.setColor(Color.red);
+        g.drawLine((int) p1.x, (int)p1.y, (int)p2.x, (int)p2.y);
     }
 }
