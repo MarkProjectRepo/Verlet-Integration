@@ -41,17 +41,20 @@ public class Verlet {
         int rows = 0, columns = 0;
         boolean first = false;
         
-        int startingX = 300, startingY = 300;
+        int startingX = 0, startingY = 0;
         
-        int width = 10, height = 5;
+        int width = 100, height = 100;
         int spacing = 10;
         
         for (int i = 0; i < width*height; i++){
             int column = i % width;
             int row = i/width;
             particles.add(new Particle(startingX+spacing*column, startingY+spacing*row, i));
-            if (i % width-1 == 0){
-                connectors.add(new Connecter());
+            if (i % width != 0){
+                connectors.add(new Connecter(particles.get(i-1), particles.get(i)));
+            }
+            if (i >= width){
+                connectors.add(new Connecter(particles.get(i-width), particles.get(i)));
             }
         }
         //rows = window.Height/14;

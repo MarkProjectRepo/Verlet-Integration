@@ -16,7 +16,7 @@ public class Connecter {
     public int index1, index2;
     final double maxLength = 15;
     
-    public Connecter(Particle p1, Particle p2, int index1, int index2){
+    public Connecter(Particle p1, Particle p2){
         this.p1 = p1;
         this.p2 = p2;
         
@@ -25,9 +25,6 @@ public class Connecter {
         
         this.y1 = p1.y;
         this.y2 = p2.y;
-        
-        this.index1 = index1;
-        this.index2 = index2;
     }
     
     public double length(){
