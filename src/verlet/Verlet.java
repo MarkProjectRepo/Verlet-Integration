@@ -20,11 +20,12 @@ import listeners.MouseListen;
 public class Verlet {
 
     Window window = new Window();
-    final int entities = 100000;
+    final int entities = 100;
     double delta;
     double mx = -1, my = -1;
     Random r = new Random();
     ArrayList<Particle> particles = new ArrayList<>();
+    ArrayList<Connecter> connectors = new ArrayList<>();
     
     public Verlet(){
         window.init();
@@ -37,10 +38,50 @@ public class Verlet {
             }
         
         });
+        int rows = 0, columns = 0;
+        boolean first = false;
         
-        for (int i = 0; i < entities; i++){
-            particles.add(new Particle(r.nextInt(window.Width), r.nextInt(window.Height)));
+        int startingX = 300, startingY = 500;
+        
+        int spacing = 10;
+        
+        for (int c = startingX; c < entities+startingX; c += spacing){
+            for (int i = startingY; i < entities+startingY; i += spacing){
+                particles.add(new Particle(i, c, particles.size()));
+                if (!first){
+                    columns++;
+                }
+            }
+            rows++;
+            first = true;
         }
+        //rows = window.Height/14;
+        //columns = window.Width/13;
+        boolean firstRow = true;
+        
+        for (int i = 0; i <= entities/spacing*9; i += 10){
+            for (int c = 0; c < columns-1; c ++){
+                    connectors.add(new Connecter(particles.get(i+c), particles.get(i+c+1), i+c, i+c+1));
+                    particles.get(i+c).addConnections(connectors.get(connectors.size()-1));
+                    particles.get(i+c+1).addConnections(connectors.get(connectors.size()-1));
+                    if (firstRow){
+                        particles.get(particles.size()-1).setStationary(true);
+                    }
+            }
+            firstRow = false;
+        }
+        
+        for (int c = 0; c < columns; c ++){
+            for (int i = c; i <= entities/spacing*9+9; i += 10){
+                connectors.add(new Connecter(particles.get(c), particles.get(i), c, i));
+                particles.get(i).addConnections(connectors.get(connectors.size()-1));
+                particles.get(c).addConnections(connectors.get(connectors.size()-1));
+            }
+        }
+        for (Particle p : particles){
+            System.out.println(p.connections.size());
+        }
+        System.out.println(particles.size());
     }
     
     public void loop(){
@@ -58,7 +99,7 @@ public class Verlet {
             
             if (time2 - time1 >= interval) {
                 delta = (time2 - time1) / (double) sToNs;
-                System.out.println((int)(1.0 / delta));
+                //System.out.println((int)(1.0 / delta));
                 update(delta);
                 time1 = time2;
             }
@@ -74,13 +115,18 @@ public class Verlet {
         for (Particle p : particles){
             p.draw(g);
         }
-        
+        for (Connecter c : connectors){
+            c.draw(g);
+        }
     }
     
     public void update(double delta){
         for (Particle p : particles){
             p.attraction(mx, my);
             p.update(delta);
+        }
+        for (Connecter c : connectors){
+            c.update(particles.get(c.index1).x, particles.get(c.index1).y, particles.get(c.index2).x, particles.get(c.index2).y);
         }
     }
     

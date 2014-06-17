@@ -8,43 +8,70 @@ package verlet;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 
 public class Particle {
     public double x, y, ox, oy;
     public double vx, vy;
+    public int identifier;
+    public boolean stationary = false;
     
-    public Particle(double x, double y){
+    ArrayList<Connecter> connections = new ArrayList<Connecter>();
+    
+    Window window = new Window();
+    
+    public Particle(double x, double y, int identifier){
         this.x = this.ox = x;
         this.y = this.oy = y;
+        this.identifier = identifier;
     }
     
     public void attraction(double x, double y){
-        if (x != -1){
+        if (x != -1 && !this.stationary){
             double dx = x - this.x;
             double dy = y - this.y;
             double distance = Math.sqrt(dx * dx + dy * dy);
-            this.x += dx / distance;
-            this.y += dy / distance;
+            for (Connecter c : connections){
+                if (c.length() <= c.maxLength){
+                    
+                    this.x += (dx / distance);
+                    this.y += (dy / distance);
+                }
+            }
         }
     }
     
+    public void setStationary(boolean state){
+        this.stationary = state;
+    }
+    
+    public void addConnections(Connecter c){
+        this.connections.add(c);
+    }
+    
     public void update(double delta){
-        this.vx = this.x - this.ox;
-        this.vy = this.y - this.oy;
-        this.ox = this.x;
-        this.oy = this.y;
-        //if (this.x <= 500 && this.x >= 0){
-            this.x += vx;
-        //}
-        //if (this.y <= 500 && this.y >= 0){
-            this.y += vy;
-        //}
+        if (!this.stationary){
+            
+            this.vx = this.x - this.ox;
+            this.vy = this.y - this.oy;
+            
+            
+            for (Connecter c : connections){
+                if (c.length() <= c.maxLength){
+                    
+                    this.ox = this.x;
+                    this.oy = this.y;
+                    this.x += vx;
+                    this.y += vy;
+                }
+            }
+        }
     }
     
     public void draw(Graphics g){
         g.setColor(Color.white);
         //g.drawOval((int)x, (int)y, 5, 5);
-        g.drawLine((int)ox, (int)oy, (int)x, (int)y);
+        g.drawLine((int)x, (int)y, (int)x, (int)y);
     }
 }
