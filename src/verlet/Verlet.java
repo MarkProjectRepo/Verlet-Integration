@@ -44,7 +44,7 @@ public class Verlet {
         int startingX = 0, startingY = 0;
         
         int width = 100, height = 100;
-        int spacing = 10;
+        int spacing = 5;
         
         for (int i = 0; i < width*height; i++){
             int column = i % width;
@@ -52,35 +52,20 @@ public class Verlet {
             particles.add(new Particle(startingX+spacing*column, startingY+spacing*row, i));
             if (i % width != 0){
                 connectors.add(new Connecter(particles.get(i-1), particles.get(i)));
+                particles.get(i-1).addConnections(connectors.get(connectors.size()-1));
+                particles.get(i).addConnections(connectors.get(connectors.size()-1));
             }
             if (i >= width){
                 connectors.add(new Connecter(particles.get(i-width), particles.get(i)));
-            }
-        }
-        //rows = window.Height/14;
-        //columns = window.Width/13;
-        boolean firstRow = true;
-        
-        /*for (int i = 0; i <= entities/rows*9; i += 10){
-            for (int c = 0; c < columns-1; c ++){
-                    connectors.add(new Connecter(particles.get(i+c), particles.get(i+c+1), i+c, i+c+1));
-                    particles.get(i+c).addConnections(connectors.get(connectors.size()-1));
-                    particles.get(i+c+1).addConnections(connectors.get(connectors.size()-1));
-            }
-            firstRow = false;
-        }
-        
-        for (int c = 0; c < columns; c ++){
-            for (int i = c; i <= entities/spacing*9+9; i += 10){
-                connectors.add(new Connecter(particles.get(c), particles.get(i), c, i));
+                particles.get(i-width).addConnections(connectors.get(connectors.size()-1));
                 particles.get(i).addConnections(connectors.get(connectors.size()-1));
-                particles.get(c).addConnections(connectors.get(connectors.size()-1));
+            }else{
+                particles.get(i).setStationary(true);
             }
-        }*/
+        }
         for (Particle p : particles){
             System.out.println(p.connections.size());
         }
-        System.out.println(particles.size());
     }
     
     public void loop(){
@@ -121,8 +106,8 @@ public class Verlet {
     
     public void update(double delta){
         for (Particle p : particles){
-            p.attraction(mx, my);
             p.update(delta);
+            p.attraction(mx, my);
         }
     }
     
