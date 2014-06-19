@@ -11,7 +11,6 @@ import java.awt.Graphics;
 
 
 public class Connecter {
-    public double x1, y1, x2, y2;
     public Particle p1, p2;
     public int index1, index2;
     final double maxLength = 15;
@@ -19,12 +18,6 @@ public class Connecter {
     public Connecter(Particle p1, Particle p2){
         this.p1 = p1;
         this.p2 = p2;
-        
-        this.x1 = p1.x;
-        this.x2 = p2.x;
-        
-        this.y1 = p1.y;
-        this.y2 = p2.y;
     }
     
     public double length(){
@@ -34,7 +27,35 @@ public class Connecter {
         return Math.sqrt(dx * dx + dy * dy);
     }
     
+    public double velLength(){
+        double dx = (this.p1.x+this.p1.vx)-(this.p2.x+this.p2.vx);
+        double dy = (this.p1.y+this.p1.vy)-(this.p2.y+this.p2.vy);
+        
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+    
+    public void correct(){
+        double diffX = p1.x - p2.x;
+        double diffY = p1.y - p2.y;
+
+        double d = Math.sqrt(diffX * diffX + diffY * diffY);
+
+        double difference = (maxLength - d) / d;
+
+        double translateX = diffX * 0.5 * difference;
+        double translateY = diffY * 0.5 * difference;
+        if (!p1.stationary){
+            p1.x += translateX;
+            p1.y += translateY;
+        }
+        if (!p2.stationary){
+            p2.x -= translateX;
+            p2.y -= translateY;
+        }
+    }
+    
     public void draw(Graphics g){
+        
         g.setColor(Color.red);
         g.drawLine((int) p1.x, (int)p1.y, (int)p2.x, (int)p2.y);
     }

@@ -31,6 +31,7 @@ public class Verlet {
         window.init();
         
         window.mainCanvas.addMouseMotionListener(new MouseListen(){
+            
             @Override
             public void mouseMoved(MouseEvent e) {
                 mx = e.getX();
@@ -41,10 +42,10 @@ public class Verlet {
         int rows = 0, columns = 0;
         boolean first = false;
         
-        int startingX = 0, startingY = 0;
+        int startingX = 100, startingY = 100;
         
-        int width = 100, height = 100;
-        int spacing = 5;
+        int width = 10, height = 100;
+        int spacing = 10;
         
         for (int i = 0; i < width*height; i++){
             int column = i % width;

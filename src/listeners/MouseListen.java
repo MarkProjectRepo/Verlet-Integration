@@ -17,7 +17,6 @@ public abstract class MouseListen implements MouseMotionListener{
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

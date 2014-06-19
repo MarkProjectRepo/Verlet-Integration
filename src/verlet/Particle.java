@@ -33,6 +33,7 @@ public class Particle {
             double dx = x - this.x;
             double dy = y - this.y;
             double distance = Math.sqrt(dx * dx + dy * dy);
+            
             this.x += (dx / distance);
             this.y += (dy / distance);
         }
@@ -57,43 +58,10 @@ public class Particle {
             
             this.x += vx;
             this.y += vy;
-            
             for (Connecter c : connections){
-                if (this.equals(c.p1)){
-                    double distancex = Math.sqrt(this.x*this.x + c.p2.x*c.p2.x);
-                    double distancey = Math.sqrt(this.y*this.y + c.p2.y*c.p2.y);
-                    if (distancex > maxDistance){
-                        double dist = distancex-maxDistance;
-                        this.x -= dist;
-                        c.p2.x -= dist;
-                    }
-                    if (distancey > maxDistance){
-                        double dist = distancey-maxDistance;
-                        this.y -= dist;
-                        c.p2.y -= dist;
-                    }
-                }else if (this.equals(c.p2)){
-                    double distancex = Math.sqrt(this.x*this.x + c.p1.x*c.p1.x);
-                    double distancey = Math.sqrt(this.y*this.y + c.p1.y*c.p1.y);
-                    if (distancey > maxDistance){
-                        double dist = distancey-maxDistance;
-                        this.y -= dist;
-                        c.p1.y -= dist;
-                    }
-                    if (distancex > maxDistance){
-                        double dist = distancex-maxDistance;
-                        this.x -= dist;
-                        c.p1.x -= dist;
-                    }
-                }
+                c.correct();
             }
             
-            /*for (Connecter c : connections){
-                if (c.length() <= c.maxLength){
-                    
-
-                }
-            }*/
         }
     }
     
