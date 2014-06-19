@@ -28,6 +28,7 @@ public class Verlet {
     ArrayList<Connecter> connectors = new ArrayList<>();
     boolean pressed = false;
     Particle part = null;
+    double spacing = 10;
     
     public Verlet(){
         window.init();
@@ -36,12 +37,13 @@ public class Verlet {
             
             @Override
             public void mouseDragged(MouseEvent e) {
+                mx = e.getX();
+                my = e.getY();
             }
             
             @Override
             public void mouseMoved(MouseEvent e){
-                    mx = e.getX();
-                    my = e.getY();
+                    
             }
             
         });
@@ -50,6 +52,11 @@ public class Verlet {
             
             @Override
             public void mouseClicked(MouseEvent e) {
+                
+            }
+            
+            @Override
+            public void mousePressed(MouseEvent e) {
                 if (part == null){
                     for (Particle p : particles){
                         if (e.getX() > p.x-5 && e.getX() < p.x+5 && e.getY() > p.y-5 && e.getY() < p.y+5){
@@ -63,9 +70,14 @@ public class Verlet {
                     part = null;
                 }
             }
+
+            @Override
+            public void mouseReleased(MouseEvent e){
+                part = null;
+            }
         });
         
-        this.createGrid(100, 0, 100, 50, 10, 10);
+        this.createGrid(0, 0, 100, 100, spacing);
         //this.createGrid(0, 0, 10, 10, 5, 5);
         
     }
@@ -96,11 +108,11 @@ public class Verlet {
         }
     }
     
-    private void createGrid(double startingX, double startingY, int width, int height, int spacingx, int spacingy){
+    private void createGrid(double startingX, double startingY, int width, int height, double spacing){
         for (int i = 0; i < width*height; i++){
             int column = i % width;
             int row = i/width;
-            particles.add(new Particle(startingX+spacingx*column, startingY+spacingy*row, i));
+            particles.add(new Particle(startingX+spacing*column, startingY+spacing*row, i));
             if (i % width != 0){
                 connectors.add(new Connecter(particles.get(i-1), particles.get(i)));
                 particles.get(i-1).addConnections(connectors.get(connectors.size()-1));
@@ -111,7 +123,7 @@ public class Verlet {
                 particles.get(i-width).addConnections(connectors.get(connectors.size()-1));
                 particles.get(i).addConnections(connectors.get(connectors.size()-1));
             }else{
-                 //particles.get(i).setStationary(true);
+                 particles.get(i).setStationary(true);
             }
         }
     }
