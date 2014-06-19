@@ -14,7 +14,7 @@ import javax.swing.*;
 
 
 public class Window {
-    public final int Width = 500, Height = 500;
+    public final int Width = 1500, Height = 1000;
     public boolean clicked = false;
     Canvas mainCanvas = new Canvas();
     JFrame frame  = new JFrame("Colliding Spheres in Space");

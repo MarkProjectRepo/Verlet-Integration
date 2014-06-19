@@ -13,7 +13,7 @@ import java.awt.Graphics;
 public class Connecter {
     public Particle p1, p2;
     public int index1, index2;
-    final double maxLength = 15;
+    final double maxLength = 5;
     
     public Connecter(Particle p1, Particle p2){
         this.p1 = p1;

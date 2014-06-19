@@ -57,7 +57,7 @@ public class Particle {
             this.oy = this.y;
             
             this.x += vx;
-            this.y += vy;
+            this.y += vy+0.5;
             for (Connecter c : connections){
                 c.correct();
             }

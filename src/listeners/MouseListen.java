@@ -16,7 +16,7 @@ import java.awt.event.MouseMotionListener;
 public abstract class MouseListen implements MouseMotionListener{
 
     @Override
-    public void mouseDragged(MouseEvent e) {
+    public void mouseMoved(MouseEvent e) {
     }
     
 }

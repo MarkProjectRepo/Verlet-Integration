@@ -33,24 +33,24 @@ public class Verlet {
         window.mainCanvas.addMouseMotionListener(new MouseListen(){
             
             @Override
-            public void mouseMoved(MouseEvent e) {
+            public void mouseDragged(MouseEvent e) {
                 mx = e.getX();
                 my = e.getY();
             }
-        
+            
         });
         int rows = 0, columns = 0;
         boolean first = false;
         
-        int startingX = 100, startingY = 100;
+        int startingX = 100, startingY = 0;
         
-        int width = 10, height = 100;
-        int spacing = 10;
+        int width = 500, height = 200;
+        int spacingx = 1, spacingy = 1;
         
         for (int i = 0; i < width*height; i++){
             int column = i % width;
             int row = i/width;
-            particles.add(new Particle(startingX+spacing*column, startingY+spacing*row, i));
+            particles.add(new Particle(startingX+spacingx*column, startingY+spacingy*row, i));
             if (i % width != 0){
                 connectors.add(new Connecter(particles.get(i-1), particles.get(i)));
                 particles.get(i-1).addConnections(connectors.get(connectors.size()-1));
@@ -88,7 +88,6 @@ public class Verlet {
                 update(delta);
                 time1 = time2;
             }
-        
         
             g.clearRect(0, 0, window.Width, window.Height);
             paint(g);
