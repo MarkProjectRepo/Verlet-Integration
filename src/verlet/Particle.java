@@ -17,6 +17,8 @@ public class Particle {
     public int identifier;
     public boolean stationary = false;
     final int maxDistance = 10;
+    public Color c;
+    public boolean focused = false;
     
     ArrayList<Connecter> connections = new ArrayList<Connecter>();
     
@@ -26,6 +28,7 @@ public class Particle {
         this.x = this.ox = x;
         this.y = this.oy = y;
         this.identifier = identifier;
+        c = Color.white;
     }
     
     public void attraction(double x, double y){
@@ -65,9 +68,15 @@ public class Particle {
         }
     }
     
+    public void setColor(Color c){
+        this.c = c;
+    }
+    
     public void draw(Graphics g){
-        g.setColor(Color.white);
-        //g.drawOval((int)x, (int)y, 5, 5);
+        g.setColor(c);
+        if (focused){
+            g.drawOval((int)x, (int)y, 5, 5);
+        }
         g.drawLine((int)x, (int)y, (int)x, (int)y);
     }
 }

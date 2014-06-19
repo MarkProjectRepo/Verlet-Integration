@@ -11,7 +11,7 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Random;
-import listeners.MouseListen;
+import listeners.*;
 
 /**
  *
@@ -26,6 +26,8 @@ public class Verlet {
     Random r = new Random();
     ArrayList<Particle> particles = new ArrayList<>();
     ArrayList<Connecter> connectors = new ArrayList<>();
+    boolean pressed = false;
+    Particle part = null;
     
     public Verlet(){
         window.init();
@@ -34,18 +36,49 @@ public class Verlet {
             
             @Override
             public void mouseDragged(MouseEvent e) {
-                mx = e.getX();
-                my = e.getY();
+            }
+            
+            @Override
+            public void mouseMoved(MouseEvent e){
+                if (part != null){
+                    mx = e.getX();
+                    my = e.getY();
+                }
             }
             
         });
+        
+        window.mainCanvas.addMouseListener(new MouseClickListen(){
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e){
+            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (part == null){
+                    for (Particle p : particles){
+                        if (e.getX() > p.x-3 && e.getX() < p.x+3 && e.getY() > p.y-3 && e.getY() < p.y+3){
+                            p.setColor(Color.blue);
+                            part = p;
+                        }
+                    }
+                }else{
+                    part.setColor(Color.white);
+                    part = null;
+                }
+            }
+        });
+        
         int rows = 0, columns = 0;
         boolean first = false;
         
         int startingX = 100, startingY = 0;
         
-        int width = 500, height = 200;
-        int spacingx = 1, spacingy = 1;
+        int width = 100, height = 10;
+        int spacingx = 10, spacingy = 10;
         
         for (int i = 0; i < width*height; i++){
             int column = i % width;
@@ -61,7 +94,7 @@ public class Verlet {
                 particles.get(i-width).addConnections(connectors.get(connectors.size()-1));
                 particles.get(i).addConnections(connectors.get(connectors.size()-1));
             }else{
-                particles.get(i).setStationary(true);
+                 particles.get(i).setStationary(true);
             }
         }
         for (Particle p : particles){
@@ -107,7 +140,10 @@ public class Verlet {
     public void update(double delta){
         for (Particle p : particles){
             p.update(delta);
-            p.attraction(mx, my);
+            if (part != null){
+                part.attraction(mx, my);
+            }
+            //p.attraction(mx, my);
         }
     }
     
