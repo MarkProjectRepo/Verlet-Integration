@@ -19,10 +19,8 @@ public class Particle {
     final int maxDistance = 10;
     public Color c;
     public boolean focused = false;
-    
-    ArrayList<Connecter> connections = new ArrayList<Connecter>();
-    
     Window window = new Window();
+    ArrayList<Connecter> connections = new ArrayList<Connecter>();
     
     public Particle(double x, double y, int identifier){
         this.x = this.ox = x;
@@ -60,10 +58,24 @@ public class Particle {
             this.oy = this.y;
             
             this.x += vx;
-            this.y += vy+0.5;
+            this.y += vy+0.1;
             for (Connecter c : connections){
                 c.correct();
             }
+            
+            if (this.y > window.Height){
+                y = window.Height;
+                vy = -vy;
+            }
+            if (this.x < 0){
+                x = 0;
+                vx = -vx;
+            }
+            if (this.x > window.Width){
+                x = window.Height;
+                vx = -vx;
+            }
+            
             
         }
     }

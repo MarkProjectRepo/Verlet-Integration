@@ -40,29 +40,22 @@ public class Verlet {
             
             @Override
             public void mouseMoved(MouseEvent e){
-                if (part != null){
                     mx = e.getX();
                     my = e.getY();
-                }
             }
             
         });
         
         window.mainCanvas.addMouseListener(new MouseClickListen(){
-            @Override
-            public void mousePressed(MouseEvent e) {
-            }
             
-            @Override
-            public void mouseReleased(MouseEvent e){
-            }
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (part == null){
                     for (Particle p : particles){
-                        if (e.getX() > p.x-3 && e.getX() < p.x+3 && e.getY() > p.y-3 && e.getY() < p.y+3){
+                        if (e.getX() > p.x-5 && e.getX() < p.x+5 && e.getY() > p.y-5 && e.getY() < p.y+5){
                             p.setColor(Color.blue);
                             part = p;
+                            
                         }
                     }
                 }else{
@@ -72,34 +65,9 @@ public class Verlet {
             }
         });
         
-        int rows = 0, columns = 0;
-        boolean first = false;
+        this.createGrid(100, 0, 100, 50, 10, 10);
+        //this.createGrid(0, 0, 10, 10, 5, 5);
         
-        int startingX = 100, startingY = 0;
-        
-        int width = 100, height = 10;
-        int spacingx = 10, spacingy = 10;
-        
-        for (int i = 0; i < width*height; i++){
-            int column = i % width;
-            int row = i/width;
-            particles.add(new Particle(startingX+spacingx*column, startingY+spacingy*row, i));
-            if (i % width != 0){
-                connectors.add(new Connecter(particles.get(i-1), particles.get(i)));
-                particles.get(i-1).addConnections(connectors.get(connectors.size()-1));
-                particles.get(i).addConnections(connectors.get(connectors.size()-1));
-            }
-            if (i >= width){
-                connectors.add(new Connecter(particles.get(i-width), particles.get(i)));
-                particles.get(i-width).addConnections(connectors.get(connectors.size()-1));
-                particles.get(i).addConnections(connectors.get(connectors.size()-1));
-            }else{
-                 particles.get(i).setStationary(true);
-            }
-        }
-        for (Particle p : particles){
-            System.out.println(p.connections.size());
-        }
     }
     
     public void loop(){
@@ -125,6 +93,26 @@ public class Verlet {
             g.clearRect(0, 0, window.Width, window.Height);
             paint(g);
             window.bufferStrategy.show();
+        }
+    }
+    
+    private void createGrid(double startingX, double startingY, int width, int height, int spacingx, int spacingy){
+        for (int i = 0; i < width*height; i++){
+            int column = i % width;
+            int row = i/width;
+            particles.add(new Particle(startingX+spacingx*column, startingY+spacingy*row, i));
+            if (i % width != 0){
+                connectors.add(new Connecter(particles.get(i-1), particles.get(i)));
+                particles.get(i-1).addConnections(connectors.get(connectors.size()-1));
+                particles.get(i).addConnections(connectors.get(connectors.size()-1));
+            }
+            if (i >= width){
+                connectors.add(new Connecter(particles.get(i-width), particles.get(i)));
+                particles.get(i-width).addConnections(connectors.get(connectors.size()-1));
+                particles.get(i).addConnections(connectors.get(connectors.size()-1));
+            }else{
+                 //particles.get(i).setStationary(true);
+            }
         }
     }
     
