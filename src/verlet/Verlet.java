@@ -8,9 +8,12 @@ package verlet;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.function.Consumer;
 import listeners.*;
 
 /**
@@ -33,6 +36,34 @@ public class Verlet {
     public Verlet(){
         window.init();
         
+        window.mainCanvas.addKeyListener(new KeyListener(){
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (part != null){
+                    if (e.getKeyChar() == KeyEvent.VK_SPACE){
+                        part.stationary = !part.stationary;
+                    }else if (e.getKeyChar() == KeyEvent.VK_C){
+                        System.out.println("ASD");
+                        particles.stream().forEach((Particle p) -> {
+                            p.stationary = false;
+                        });
+                    }
+                }
+                
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+            
+        });
+        
         window.mainCanvas.addMouseMotionListener(new MouseListen(){
             
             @Override
@@ -43,7 +74,8 @@ public class Verlet {
             
             @Override
             public void mouseMoved(MouseEvent e){
-                    
+                mx = e.getX();
+                my = e.getY(); 
             }
             
         });
@@ -59,7 +91,7 @@ public class Verlet {
             public void mousePressed(MouseEvent e) {
                 if (part == null){
                     for (Particle p : particles){
-                        if (e.getX() > p.x-5 && e.getX() < p.x+5 && e.getY() > p.y-5 && e.getY() < p.y+5){
+                        if (e.getX() > p.x-10 && e.getX() < p.x+10 && e.getY() > p.y-10 && e.getY() < p.y+10){
                             p.setColor(Color.blue);
                             part = p;
                             
@@ -77,7 +109,7 @@ public class Verlet {
             }
         });
         
-        this.createGrid(0, 0, 100, 100, spacing);
+        this.createGrid(100, 0, 50, 50, spacing, spacing);
         //this.createGrid(0, 0, 10, 10, 5, 5);
         
     }
@@ -97,7 +129,7 @@ public class Verlet {
             
             if (time2 - time1 >= interval) {
                 delta = (time2 - time1) / (double) sToNs;
-                System.out.println((int)(1.0 / delta));
+                //System.out.println((int)(1.0 / delta));
                 update(delta);
                 time1 = time2;
             }
@@ -108,11 +140,11 @@ public class Verlet {
         }
     }
     
-    private void createGrid(double startingX, double startingY, int width, int height, double spacing){
+    private void createGrid(double startingX, double startingY, int width, int height, double spacingx, double spacingy){
         for (int i = 0; i < width*height; i++){
             int column = i % width;
             int row = i/width;
-            particles.add(new Particle(startingX+spacing*column, startingY+spacing*row, i));
+            particles.add(new Particle(startingX+spacingx*column, startingY+spacingy*row, i));
             if (i % width != 0){
                 connectors.add(new Connecter(particles.get(i-1), particles.get(i)));
                 particles.get(i-1).addConnections(connectors.get(connectors.size()-1));
@@ -123,7 +155,7 @@ public class Verlet {
                 particles.get(i-width).addConnections(connectors.get(connectors.size()-1));
                 particles.get(i).addConnections(connectors.get(connectors.size()-1));
             }else{
-                 particles.get(i).setStationary(true);
+                particles.get(i).setStationary(true);
             }
         }
     }
@@ -143,7 +175,6 @@ public class Verlet {
             if (part != null){
                 part.attraction(mx, my);
             }
-            //p.attraction(mx, my);
         }
     }
     

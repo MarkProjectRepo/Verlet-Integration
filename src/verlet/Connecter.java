@@ -13,7 +13,7 @@ import java.awt.Graphics;
 public class Connecter {
     public Particle p1, p2;
     public int index1, index2;
-    final double maxLength = 10;
+    final double maxLength = 15;
     
     public Connecter(Particle p1, Particle p2){
         this.p1 = p1;
@@ -48,8 +48,8 @@ public class Connecter {
     }
     
     public void draw(Graphics g){
-        g.setColor(Color.red);
-        //g.setColor(Color.getHSBColor((float)length(), (float)length()/10, 1));
+        //g.setColor(Color.red);
+        g.setColor(Color.getHSBColor((float)length(), 0.2f, 0.5f));
         g.drawLine((int) p1.x, (int)p1.y, (int)p2.x, (int)p2.y);
     }
 }
