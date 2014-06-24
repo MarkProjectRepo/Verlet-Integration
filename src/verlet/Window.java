@@ -14,7 +14,8 @@ import javax.swing.*;
 
 
 public class Window {
-    public final int Width = 1500, Height = 1000;
+    private final Dimension dim = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+    public final int Width = dim.width, Height = dim.height;
     public boolean clicked = false;
     Canvas mainCanvas = new Canvas();
     JFrame frame  = new JFrame("Colliding Spheres in Space");
@@ -28,8 +29,12 @@ public class Window {
     JPanel panel;
     
     public void init(){
+        
+        frame.setUndecorated(true);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        
         panel = (JPanel) frame.getContentPane();
-        panel.setSize(Height - 20, Width - 20);
+        panel.setSize(Height, Width);
         
         menuPanel.setSize(Width,20);
         
@@ -37,7 +42,6 @@ public class Window {
         mainCanvas.setSize(Width, Height);
         
         menuPanel.setVisible(false);
-        
         
         
         menuPanel.setBackground(Color.white);

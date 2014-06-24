@@ -31,31 +31,42 @@ public class Verlet {
     ArrayList<Connecter> connectors = new ArrayList<>();
     boolean pressed = false;
     Particle part = null;
-    double spacing = 10;
+    double spacing = 5;
+    ArrayList<Grid> grid = new ArrayList<>();
+    
+    
+    
     
     public Verlet(){
+        
+        grid.add(new Grid(100, 0, 50, 50, 5));
+        
         window.init();
         
         window.mainCanvas.addKeyListener(new KeyListener(){
 
             @Override
             public void keyTyped(KeyEvent e) {
-                if (part != null){
-                    if (e.getKeyChar() == KeyEvent.VK_SPACE){
-                        part.stationary = !part.stationary;
-                    }else if (e.getKeyChar() == KeyEvent.VK_C){
-                        System.out.println("ASD");
-                        particles.stream().forEach((Particle p) -> {
-                            p.stationary = false;
-                        });
-                    }
-                }
+                
                 
             }
 
             @Override
             public void keyPressed(KeyEvent e) {
-                
+                if (part != null){
+                    if (e.getKeyCode() == KeyEvent.VK_SPACE){
+                        part.stationary = !part.stationary;
+                    }
+                    
+                }
+                if (e.getKeyCode() == KeyEvent.VK_C){
+                    grid1.particles.stream().forEach((Particle p) -> {
+                        p.stationary = false;
+                    });
+                }
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE){
+                    System.exit(0);
+                }
             }
 
             @Override
@@ -90,7 +101,7 @@ public class Verlet {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (part == null){
-                    for (Particle p : particles){
+                    for (Particle p : grid1.particles){
                         if (e.getX() > p.x-10 && e.getX() < p.x+10 && e.getY() > p.y-10 && e.getY() < p.y+10){
                             p.setColor(Color.blue);
                             part = p;
@@ -109,7 +120,7 @@ public class Verlet {
             }
         });
         
-        this.createGrid(100, 0, 50, 50, spacing, spacing);
+        
         //this.createGrid(0, 0, 10, 10, 5, 5);
         
     }
@@ -140,37 +151,17 @@ public class Verlet {
         }
     }
     
-    private void createGrid(double startingX, double startingY, int width, int height, double spacingx, double spacingy){
-        for (int i = 0; i < width*height; i++){
-            int column = i % width;
-            int row = i/width;
-            particles.add(new Particle(startingX+spacingx*column, startingY+spacingy*row, i));
-            if (i % width != 0){
-                connectors.add(new Connecter(particles.get(i-1), particles.get(i)));
-                particles.get(i-1).addConnections(connectors.get(connectors.size()-1));
-                particles.get(i).addConnections(connectors.get(connectors.size()-1));
-            }
-            if (i >= width){
-                connectors.add(new Connecter(particles.get(i-width), particles.get(i)));
-                particles.get(i-width).addConnections(connectors.get(connectors.size()-1));
-                particles.get(i).addConnections(connectors.get(connectors.size()-1));
-            }else{
-                particles.get(i).setStationary(true);
-            }
-        }
-    }
-    
     public void paint(Graphics g){
-        for (Particle p : particles){
+        for (Particle p : grid1.particles){
             p.draw(g);
         }
-        for (Connecter c : connectors){
+        for (Connecter c : grid1.connectors){
             c.draw(g);
         }
     }
     
     public void update(double delta){
-        for (Particle p : particles){
+        for (Particle p : grid1.particles){
             p.update(delta);
             if (part != null){
                 part.attraction(mx, my);

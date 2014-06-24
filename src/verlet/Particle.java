@@ -16,7 +16,6 @@ public class Particle {
     public double vx, vy;
     public int identifier;
     public boolean stationary = false;
-    final int maxDistance = 10;
     public Color c;
     public boolean focused = false;
     Window window = new Window();
