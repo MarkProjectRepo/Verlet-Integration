@@ -6,20 +6,64 @@
 
 package verlet;
 
+import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.function.Consumer;
+import javax.imageio.ImageIO;
+import java.io.*;
 import listeners.*;
 
 /**
  *
  * @author Mark
  */
+
+
+class ImageDestructor{
+    
+    BufferedImage imgs[];
+    
+    public ImageDestructor(int rows, int cols) throws IOException{
+        File fimage = new File("Canada.png");
+        
+        FileInputStream fis = new FileInputStream(fimage);
+        
+        BufferedImage image = ImageIO.read(fis);
+        
+        int chunks = rows * cols;
+
+        int chunkWidth = image.getWidth() / cols; // determines the chunk width and height
+        int chunkHeight = image.getHeight() / rows;
+        int count = 0;
+        
+        imgs = new BufferedImage[chunks]; //Image array to hold image chunks
+        
+        for (int x = 0; x < rows; x++) {
+            for (int y = 0; y < cols; y++) {
+                //Initialize the image array with image chunks
+                imgs[count] = new BufferedImage(chunkWidth, chunkHeight, image.getType());
+
+                // draws the image chunk
+                Graphics2D gr = imgs[count++].createGraphics();
+                gr.drawImage(image, 0, 0, chunkWidth, chunkHeight, chunkWidth * y, chunkHeight * x, chunkWidth * y + chunkWidth, chunkHeight * x + chunkHeight, null);
+                gr.dispose();
+            }
+        }
+        
+    }
+    
+    
+}
+    
+
 public class Verlet {
 
     Window window = new Window();
@@ -32,24 +76,19 @@ public class Verlet {
     boolean pressed = false;
     Particle part = null;
     double spacing = 5;
-    ArrayList<Grid> grid = new ArrayList<>();
+    Grid grid = new Grid(100, 0, 150, 150, 5);
     
     
     
     
     public Verlet(){
         
-        grid.add(new Grid(100, 0, 50, 50, 5));
-        
         window.init();
         
         window.mainCanvas.addKeyListener(new KeyListener(){
 
             @Override
-            public void keyTyped(KeyEvent e) {
-                
-                
-            }
+            public void keyTyped(KeyEvent e) {}
 
             @Override
             public void keyPressed(KeyEvent e) {
@@ -60,9 +99,9 @@ public class Verlet {
                     
                 }
                 if (e.getKeyCode() == KeyEvent.VK_C){
-                    grid1.particles.stream().forEach((Particle p) -> {
+                    for (Particle p : grid.getParticles()) {
                         p.stationary = false;
-                    });
+                    }
                 }
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE){
                     System.exit(0);
@@ -101,7 +140,7 @@ public class Verlet {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (part == null){
-                    for (Particle p : grid1.particles){
+                    for (Particle p : grid.getParticles()){
                         if (e.getX() > p.x-10 && e.getX() < p.x+10 && e.getY() > p.y-10 && e.getY() < p.y+10){
                             p.setColor(Color.blue);
                             part = p;
@@ -152,21 +191,21 @@ public class Verlet {
     }
     
     public void paint(Graphics g){
-        for (Particle p : grid1.particles){
+        grid.getParticles().stream().forEach((p) -> {
             p.draw(g);
-        }
-        for (Connecter c : grid1.connectors){
+        });
+        grid.getConnecters().stream().forEach((c) -> {
             c.draw(g);
-        }
+        });
     }
     
     public void update(double delta){
-        for (Particle p : grid1.particles){
+        grid.getParticles().stream().map((p) -> {
             p.update(delta);
-            if (part != null){
-                part.attraction(mx, my);
-            }
-        }
+            return p;
+        }).filter((_item) -> (part != null)).forEach((_item) -> {
+            part.attraction(mx, my);
+        });
     }
     
     public static void main(String[] args) {

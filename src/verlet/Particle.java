@@ -62,18 +62,6 @@ public class Particle {
                 c.correct();
             }
             
-            if (this.y > window.Height){
-                y = window.Height;
-                vy = -vy;
-            }
-            if (this.x < 0){
-                x = 0;
-                vx = -vx;
-            }
-            if (this.x > window.Width){
-                x = window.Height;
-                vx = -vx;
-            }
             
             
         }
